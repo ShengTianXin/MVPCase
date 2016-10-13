@@ -15,7 +15,7 @@ import java.util.List;
  * </p>
  * Created by Administrator on 2016/10/13 0013.
  */
-public class HomePresenter implements HomeModel.Model{
+public class HomePresenter implements HomeModel.Model {
 
     // 视图接口对象
     private HomeView mHomeView;
@@ -26,19 +26,23 @@ public class HomePresenter implements HomeModel.Model{
 
     @UiThread
     public void loadData() {
-        mHomeView.showLoading();
+        if (mHomeView != null) {
+            mHomeView.showLoading();
+        }
         new HomeModel(this).asyncLoadData();
     }
 
     @UiThread
     @Override
     public void setData(List<String> datas) {
-        mHomeView.hideLoading();
-        if (datas == null) {
-            mHomeView.showMessage("未知错误!");
-            return;
-        }
-        mHomeView.refreshListView(datas);
-    }
+        if (mHomeView != null) {
+            mHomeView.hideLoading();
 
+            if (datas == null) {
+                mHomeView.showMessage("未知错误!");
+                return;
+            }
+            mHomeView.refreshListView(datas);
+        }
+    }
 }
