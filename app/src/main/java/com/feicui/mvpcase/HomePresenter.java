@@ -2,6 +2,8 @@ package com.feicui.mvpcase;
 
 import android.support.annotation.UiThread;
 
+import com.feicui.mvpcase.basemvp.MvpPresenter;
+
 import java.util.List;
 
 /**
@@ -15,34 +17,48 @@ import java.util.List;
  * </p>
  * Created by Administrator on 2016/10/13 0013.
  */
-public class HomePresenter implements HomeModel.Model {
+public class HomePresenter extends MvpPresenter<HomeView> implements HomeModel.Model {
 
-    // 视图接口对象
-    private HomeView mHomeView;
-
-    public HomePresenter(HomeView homeView) {
-        mHomeView = homeView;
-    }
+    // 视图接口对象,获取视图
+    private HomeView mHomeView = super.getView();
 
     @UiThread
     public void loadData() {
-        if (mHomeView != null) {
-            mHomeView.showLoading();
-        }
+        mHomeView = super.getView();
+        mHomeView.showLoading();
         new HomeModel(this).asyncLoadData();
     }
 
     @UiThread
     @Override
     public void setData(List<String> datas) {
-        if (mHomeView != null) {
-            mHomeView.hideLoading();
 
+            mHomeView.hideLoading();
             if (datas == null) {
-                mHomeView.showMessage("未知错误!");
+                mHomeView.showMessage("未知错误,数据获取失败！");
                 return;
             }
             mHomeView.refreshListView(datas);
-        }
+    }
+
+    /**
+     * 一个HomeView接口(视图接口)空的实现
+     * @return
+     */
+    protected final HomeView getNullObject() {
+        HomeView homeView = new HomeView() {
+            @Override
+            public void showLoading() {}
+
+            @Override
+            public void hideLoading() {}
+
+            @Override
+            public void refreshListView(List<String> datas) {}
+
+            @Override
+            public void showMessage(String msg) {}
+        };
+        return homeView;
     }
 }

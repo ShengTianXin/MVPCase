@@ -34,19 +34,35 @@ public class MainActivity extends AppCompatActivity implements HomeView {
 
     private ArrayAdapter<String> arrayAdapter;
 
+    private HomePresenter mHomePresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
         ButterKnife.bind(this);
         // 用ArrayAdapter设置listView的适配器
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(arrayAdapter);
+        /**Presenter*/
+        mHomePresenter = new HomePresenter();
+        mHomePresenter.attachView(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHomePresenter.detachView();
     }
 
     @OnClick(R.id.btn_refresh)
     public void refreshData() {
-        new HomePresenter(this).loadData();
+        mHomePresenter.loadData();
     }
 
     // 视图上的工作如下
