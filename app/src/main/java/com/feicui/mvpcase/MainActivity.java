@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements HomeView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /**Presenter*/
+        mHomePresenter = new HomePresenter();
+        mHomePresenter.onCreate();
+        mHomePresenter.attachView(this);
     }
 
     @Override
@@ -49,14 +53,12 @@ public class MainActivity extends AppCompatActivity implements HomeView {
         // 用ArrayAdapter设置listView的适配器
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         listView.setAdapter(arrayAdapter);
-        /**Presenter*/
-        mHomePresenter = new HomePresenter();
-        mHomePresenter.attachView(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mHomePresenter.onDestroy();
         mHomePresenter.detachView();
     }
 
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements HomeView {
         mHomePresenter.loadData();
     }
 
+    // start view interface ----------------------------------
     // 视图上的工作如下
     @Override
     public void showLoading() {
@@ -89,5 +92,5 @@ public class MainActivity extends AppCompatActivity implements HomeView {
     public void showMessage(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
+    // end view interface ----------------------------------
 }

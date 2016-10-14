@@ -4,6 +4,9 @@ import android.support.annotation.UiThread;
 
 import com.feicui.mvpcase.basemvp.MvpPresenter;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 /**
@@ -17,28 +20,25 @@ import java.util.List;
  * </p>
  * Created by Administrator on 2016/10/13 0013.
  */
-public class HomePresenter extends MvpPresenter<HomeView> implements HomeModel.Model {
+public class HomePresenter extends MvpPresenter<HomeView> {
 
     // 视图接口对象,获取视图
     private HomeView mHomeView = super.getView();
 
     @UiThread
     public void loadData() {
-        mHomeView = super.getView();
         mHomeView.showLoading();
-        new HomeModel(this).asyncLoadData();
+        new HomeModel().asyncLoadData();
     }
 
-    @UiThread
-    @Override
-    public void setData(List<String> datas) {
-
-            mHomeView.hideLoading();
-            if (datas == null) {
-                mHomeView.showMessage("未知错误,数据获取失败！");
-                return;
-            }
-            mHomeView.refreshListView(datas);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(HomeEvent homeEvent){
+        mHomeView.hideLoading();
+        if (homeEvent.datas == null) {
+            mHomeView.showMessage("未知错误,数据获取失败！");
+            return;
+        }
+        mHomeView.refreshListView(homeEvent.datas);
     }
 
     /**
