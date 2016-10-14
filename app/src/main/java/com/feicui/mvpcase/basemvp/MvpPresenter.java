@@ -1,5 +1,7 @@
 package com.feicui.mvpcase.basemvp;
 
+import android.util.Log;
+
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -12,6 +14,7 @@ public abstract class MvpPresenter<V extends MvpView> {
     private V mView;
 
     protected final V getView() {
+        Log.e("TAG**********",mView + "");
         return mView;
     }
 
@@ -39,6 +42,7 @@ public abstract class MvpPresenter<V extends MvpView> {
      */
     public final void attachView(V view) {
         mView = view;
+        Log.e("TAG++++++++++++++++",mView + "");
     }
 
     /**

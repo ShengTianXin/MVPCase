@@ -22,23 +22,20 @@ import java.util.List;
  */
 public class HomePresenter extends MvpPresenter<HomeView> {
 
-    // 视图接口对象,获取视图
-    private HomeView mHomeView = super.getView();
-
     @UiThread
     public void loadData() {
-        mHomeView.showLoading();
+        getView().showLoading();
         new HomeModel().asyncLoadData();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(HomeEvent homeEvent){
-        mHomeView.hideLoading();
+        getView().hideLoading();
         if (homeEvent.datas == null) {
-            mHomeView.showMessage("未知错误,数据获取失败！");
+            getView().showMessage("未知错误,数据获取失败！");
             return;
         }
-        mHomeView.refreshListView(homeEvent.datas);
+        getView().refreshListView(homeEvent.datas);
     }
 
     /**

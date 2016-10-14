@@ -10,14 +10,14 @@ import java.util.List;
  */
 public class HomeModel {
 
-    private Thread thread;
+    private Thread mThread;
 
     public void asyncLoadData() {
-        if (thread != null) {
-            thread.interrupt();
-            thread = null;
+        if (mThread != null) {
+            mThread.interrupt();
+            mThread = null;
         }
-        thread = new Thread(new Runnable() {
+        mThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -42,7 +42,7 @@ public class HomeModel {
                 }
             }
         });
-        thread.start();
+        mThread.start();
     }
 
 }
